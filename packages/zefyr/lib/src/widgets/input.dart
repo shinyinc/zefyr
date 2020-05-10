@@ -18,6 +18,8 @@ class InputConnectionController implements TextInputClient {
 
   final RemoteValueChanged onValueChanged;
 
+  @override TextEditingValue get currentTextEditingValue => _lastKnownRemoteTextEditingValue;
+
   /// Returns `true` if there is open input connection.
   bool get hasConnection =>
       _textInputConnection != null && _textInputConnection.attached;
