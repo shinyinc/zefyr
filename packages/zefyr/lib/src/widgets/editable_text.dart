@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:notus/notus.dart';
+import 'package:zefyr/src/widgets/block.dart';
 
 import 'code.dart';
 import 'common.dart';
@@ -256,6 +257,12 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
       return ZefyrList(node: block);
     } else if (blockStyle == NotusAttribute.block.quote) {
       return ZefyrQuote(node: block);
+    } else if (blockStyle.value.startsWith('indent')) {
+      final level = int.parse(blockStyle.value.split('-').last);
+      return Padding(
+        padding: EdgeInsets.only(left: level * 8.0),
+        child: ZefyrBlock(node: block),
+      );
     }
 
     throw UnimplementedError('Block format $blockStyle.');

@@ -74,6 +74,7 @@ class NotusAttribute<T> implements NotusAttributeBuilder<T> {
   static final Map<String, NotusAttributeBuilder> _registry = {
     NotusAttribute.bold.key: NotusAttribute.bold,
     NotusAttribute.italic.key: NotusAttribute.italic,
+    NotusAttribute.strikethrough.key: NotusAttribute.strikethrough,
     NotusAttribute.link.key: NotusAttribute.link,
     NotusAttribute.heading.key: NotusAttribute.heading,
     NotusAttribute.block.key: NotusAttribute.block,
@@ -87,6 +88,9 @@ class NotusAttribute<T> implements NotusAttributeBuilder<T> {
 
   /// Italic style attribute.
   static const italic = _ItalicAttribute();
+
+  // Strikethrough style attribute
+  static const strikethrough = _StrikethroughAttribute();
 
   /// Link style attribute.
   // ignore: const_eval_throws_exception
@@ -332,6 +336,11 @@ class _ItalicAttribute extends NotusAttribute<bool> {
   const _ItalicAttribute() : super._('i', NotusAttributeScope.inline, true);
 }
 
+/// Applies strikethrough style to a text segment.
+class _StrikethroughAttribute extends NotusAttribute<bool> {
+  const _StrikethroughAttribute() : super._('s', NotusAttributeScope.inline, true);
+}
+
 /// Builder for link attribute values.
 ///
 /// There is no need to use this class directly, consider using
@@ -387,6 +396,10 @@ class BlockAttributeBuilder extends NotusAttributeBuilder<String> {
   /// Formats a block of lines as a quote.
   NotusAttribute<String> get quote =>
       NotusAttribute<String>._(key, scope, 'quote');
+
+  /// Formats a block of lines with an indentation.
+  NotusAttribute<String> indent(int level) =>
+      NotusAttribute<String>._(key, scope, 'indent-${level}');
 }
 
 class EmbedAttributeBuilder
