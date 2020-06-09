@@ -13,7 +13,7 @@ class ZefyrIndent extends StatelessWidget {
         node.style.get<int>(NotusAttribute.indentation)?.value ?? 0;
 
     return Padding(
-      padding: EdgeInsets.only(left: (indentLevel * 16.0).abs()),
+      padding: EdgeInsets.only(left: indentLevel * 16.0),
       child: child,
     );
   }
