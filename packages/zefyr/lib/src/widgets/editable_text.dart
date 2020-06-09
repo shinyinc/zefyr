@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:notus/notus.dart';
-import 'package:zefyr/src/widgets/block.dart';
 import 'package:zefyr/src/widgets/indent.dart';
 
 import 'code.dart';
