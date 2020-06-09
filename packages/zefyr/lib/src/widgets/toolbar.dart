@@ -50,8 +50,8 @@ final kZefyrToolbarAttributeActions = <ZefyrToolbarAction, NotusAttributeKey>{
   ZefyrToolbarAction.headingLevel3: NotusAttribute.heading.level3,
   ZefyrToolbarAction.bulletList: NotusAttribute.block.bulletList,
   ZefyrToolbarAction.numberList: NotusAttribute.block.numberList,
-  ZefyrToolbarAction.indentLeft: NotusAttribute.block.indent(0),
-  ZefyrToolbarAction.indentRight: NotusAttribute.block.indent(1),
+  ZefyrToolbarAction.indentLeft: NotusAttribute.indentLess,
+  ZefyrToolbarAction.indentRight: NotusAttribute.indentMore,
   ZefyrToolbarAction.code: NotusAttribute.block.code,
   ZefyrToolbarAction.quote: NotusAttribute.block.quote,
   ZefyrToolbarAction.horizontalRule: NotusAttribute.embed.horizontalRule,
@@ -263,8 +263,16 @@ class ZefyrToolbarState extends State<ZefyrToolbar>
       HeadingButton(),
       buildButton(context, ZefyrToolbarAction.bulletList),
       buildButton(context, ZefyrToolbarAction.numberList),
-      buildButton(context, ZefyrToolbarAction.indentLeft),
-      buildButton(context, ZefyrToolbarAction.indentRight),
+      buildButton(context, ZefyrToolbarAction.indentLeft, onPressed: () {
+        editor.formatSelection(
+          kZefyrToolbarAttributeActions[ZefyrToolbarAction.indentLeft],
+        );
+      }),
+      buildButton(context, ZefyrToolbarAction.indentRight, onPressed: () {
+        editor.formatSelection(
+          kZefyrToolbarAttributeActions[ZefyrToolbarAction.indentRight],
+        );
+      }),
       buildButton(context, ZefyrToolbarAction.quote),
       buildButton(context, ZefyrToolbarAction.code),
       buildButton(context, ZefyrToolbarAction.horizontalRule),

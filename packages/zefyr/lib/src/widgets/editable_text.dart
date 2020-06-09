@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:notus/notus.dart';
 import 'package:zefyr/src/widgets/block.dart';
+import 'package:zefyr/src/widgets/indent.dart';
 
 import 'code.dart';
 import 'common.dart';
@@ -239,33 +240,35 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
 
   Widget _defaultChildBuilder(BuildContext context, Node node) {
     if (node is LineNode) {
+      Widget child;
       if (node.hasEmbed) {
-        return ZefyrLine(node: node);
+        child = ZefyrLine(node: node);
       } else if (node.style.contains(NotusAttribute.heading)) {
-        return ZefyrHeading(node: node);
+        child = ZefyrHeading(node: node);
+      } else {
+        child = ZefyrParagraph(node: node);
       }
-      return ZefyrParagraph(node: node);
-    }
 
-    final BlockNode block = node;
-    final blockStyle = block.style.get(NotusAttribute.block);
-    if (blockStyle == NotusAttribute.block.code) {
-      return ZefyrCode(node: block);
-    } else if (blockStyle == NotusAttribute.block.bulletList) {
-      return ZefyrList(node: block);
-    } else if (blockStyle == NotusAttribute.block.numberList) {
-      return ZefyrList(node: block);
-    } else if (blockStyle == NotusAttribute.block.quote) {
-      return ZefyrQuote(node: block);
-    } else if (blockStyle.value.startsWith('indent')) {
-      final level = int.parse(blockStyle.value.split('-').last);
-      return Padding(
-        padding: EdgeInsets.only(left: level * 8.0),
-        child: ZefyrBlock(node: block),
+      return ZefyrIndent(
+        child: child,
+        node: node,
       );
+    } else {
+      final BlockNode block = node;
+      final blockStyle = block.style.get(NotusAttribute.block);
+
+      if (blockStyle == NotusAttribute.block.code) {
+        return ZefyrCode(node: block);
+      } else if (blockStyle == NotusAttribute.block.bulletList) {
+        return ZefyrList(node: block);
+      } else if (blockStyle == NotusAttribute.block.numberList) {
+        return ZefyrList(node: block);
+      } else if (blockStyle == NotusAttribute.block.quote) {
+        return ZefyrQuote(node: block);
+      }
     }
 
-    throw UnimplementedError('Block format $blockStyle.');
+    throw UnimplementedError('This format is not defined.');
   }
 
   void _updateSubscriptions([ZefyrEditableText oldWidget]) {
