@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 import 'package:collection/collection.dart';
+import 'package:notus/notus.dart';
 import 'package:quiver_hashcode/hashcode.dart';
 
 /// Scope of a style attribute, defines context in which an attribute can be
@@ -74,8 +75,10 @@ class NotusAttribute<T> implements NotusAttributeBuilder<T> {
   static final Map<String, NotusAttributeBuilder> _registry = {
     NotusAttribute.bold.key: NotusAttribute.bold,
     NotusAttribute.italic.key: NotusAttribute.italic,
+    NotusAttribute.strikethrough.key: NotusAttribute.strikethrough,
     NotusAttribute.link.key: NotusAttribute.link,
     NotusAttribute.heading.key: NotusAttribute.heading,
+    NotusAttribute.indentation.key: NotusAttribute.indentation,
     NotusAttribute.block.key: NotusAttribute.block,
     NotusAttribute.embed.key: NotusAttribute.embed,
   };
@@ -87,6 +90,9 @@ class NotusAttribute<T> implements NotusAttributeBuilder<T> {
 
   /// Italic style attribute.
   static const italic = _ItalicAttribute();
+
+  // Strikethrough style attribute
+  static const strikethrough = _StrikethroughAttribute();
 
   /// Link style attribute.
   // ignore: const_eval_throws_exception
@@ -106,6 +112,18 @@ class NotusAttribute<T> implements NotusAttributeBuilder<T> {
 
   /// Alias for [NotusAttribute.heading.level3].
   static NotusAttribute<int> get h3 => heading.level3;
+
+  /// Indentation attribute
+  static const indentation = IndentationAttributeBuilder._();
+
+  /// Alias for [NotusAttribute.indentation.indent]
+  static NotusAttribute<int> indent(int level) => indentation.indent(level);
+
+  /// Alias for [NotusAttribute.indentation.indentMore]
+  static NotusAttribute<int> get indentMore => indentation.indentMore;
+
+  /// Alias for [NotusAttribute.indentation.indentLess]
+  static NotusAttribute<int> get indentLess => indentation.indentLess;
 
   /// Block attribute
   // ignore: const_eval_throws_exception
@@ -200,7 +218,8 @@ class NotusStyle {
 
   final Map<String, NotusAttribute> _data;
 
-  static NotusStyle fromJson(Map<String, dynamic> data) {
+  static NotusStyle fromJson(
+    Map<String, dynamic> data, ) {
     if (data == null) return NotusStyle();
 
     final result = data.map((String key, dynamic value) {
@@ -332,6 +351,12 @@ class _ItalicAttribute extends NotusAttribute<bool> {
   const _ItalicAttribute() : super._('i', NotusAttributeScope.inline, true);
 }
 
+/// Applies strikethrough style to a text segment.
+class _StrikethroughAttribute extends NotusAttribute<bool> {
+  const _StrikethroughAttribute()
+      : super._('s', NotusAttributeScope.inline, true);
+}
+
 /// Builder for link attribute values.
 ///
 /// There is no need to use this class directly, consider using
@@ -362,6 +387,30 @@ class HeadingAttributeBuilder extends NotusAttributeBuilder<int> {
 
   /// Level 3 heading, equivalent of `H3` in HTML.
   NotusAttribute<int> get level3 => NotusAttribute<int>._(key, scope, 3);
+}
+
+/// Builder for indentation attribute.
+///
+/// There is no need to use this class directly, consider using
+/// [NotusAttribute.indentation] instead.
+class IndentationAttributeBuilder extends NotusAttributeBuilder<int> {
+  static const _kIndent = 'indent';
+  static const kIndentMore = -1;
+  static const kIndentLess = -2;
+  const IndentationAttributeBuilder._()
+      : super._(_kIndent, NotusAttributeScope.line);
+
+  /// Indent the current line with this level
+  NotusAttribute<int> indent(int level) =>
+      NotusAttribute<int>._(key, scope, level);
+
+  /// Increment the current indentation level
+  NotusAttribute<int> get indentMore =>
+      NotusAttribute<int>._(key, scope, kIndentMore);
+
+  /// Decrement the current indentation level
+  NotusAttribute<int> get indentLess =>
+      NotusAttribute<int>._(key, scope, kIndentLess);
 }
 
 /// Builder for block attribute styles (number/bullet lists, code and quote).

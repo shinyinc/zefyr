@@ -5,6 +5,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 import 'package:notus/notus.dart';
+import 'package:notus/notus.dart';
 import 'package:quill_delta/quill_delta.dart';
 import 'package:zefyr/util.dart';
 
@@ -168,7 +169,8 @@ class ZefyrController extends ChangeNotifier {
 
     if (length == 0 &&
         (attribute.key == NotusAttribute.bold.key ||
-            attribute.key == NotusAttribute.italic.key)) {
+            attribute.key == NotusAttribute.italic.key ||
+            attribute.key == NotusAttribute.strikethrough.key)) {
       // Add the attribute to our toggledStyle. It will be used later upon insertion.
       _toggledStyles = toggledStyles.put(attribute);
     }
@@ -188,9 +190,26 @@ class ZefyrController extends ChangeNotifier {
 
   /// Formats current selection with [attribute].
   void formatSelection(NotusAttribute attribute) {
-    int index = _selection.start;
-    int length = _selection.end - index;
-    formatText(index, length, attribute);
+    final index = _selection.start;
+    final length = _selection.end - index;
+    var attr = attribute;
+
+    if (attr.key == NotusAttribute.indentation.key) {
+      final currentStyle = getSelectionStyle();
+      var level = currentStyle.get(NotusAttribute.indentation)?.value ?? 0;
+
+      if (attr.value == IndentationAttributeBuilder.kIndentLess) {
+        if (level > 0) level -= 1;
+      } else if (attr.value == IndentationAttributeBuilder.kIndentMore) {
+        level += 1;
+      } else {
+        level = attr.value;
+      }
+
+      attr = NotusAttribute.indent(level);
+    }
+
+    formatText(index, length, attr);
   }
 
   /// Returns style of specified text range.

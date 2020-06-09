@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:notus/notus.dart';
 
 import 'common.dart';
+import 'indent.dart';
 import 'paragraph.dart';
 import 'theme.dart';
 
@@ -86,9 +87,12 @@ class ZefyrListItem extends StatelessWidget {
       bullet = Padding(padding: padding, child: bullet);
     }
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[bullet, Expanded(child: content)],
+    return ZefyrIndent(
+      node: node,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[bullet, Expanded(child: content)],
+      ),
     );
   }
 }

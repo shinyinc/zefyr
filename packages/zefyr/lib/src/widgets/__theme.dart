@@ -55,6 +55,7 @@ class ZefyrTheme extends InheritedWidget {
 class ZefyrThemeData {
   final TextStyle boldStyle;
   final TextStyle italicStyle;
+  final TextStyle strikethroughStyle;
   final TextStyle linkStyle;
   final StyleTheme paragraphTheme;
   final HeadingTheme headingTheme;
@@ -76,12 +77,16 @@ class ZefyrThemeData {
     const padding = EdgeInsets.symmetric(vertical: 8.0);
     final boldStyle = TextStyle(fontWeight: FontWeight.bold);
     final italicStyle = TextStyle(fontStyle: FontStyle.italic);
+    final strikethroughStyle =
+        TextStyle(decoration: TextDecoration.lineThrough);
+
     final linkStyle = TextStyle(
         color: themeData.accentColor, decoration: TextDecoration.underline);
 
     return ZefyrThemeData(
       boldStyle: boldStyle,
       italicStyle: italicStyle,
+      strikethroughStyle: strikethroughStyle,
       linkStyle: linkStyle,
       paragraphTheme: StyleTheme(textStyle: paragraphStyle, padding: padding),
       headingTheme: HeadingTheme.fallback(context),
@@ -96,6 +101,7 @@ class ZefyrThemeData {
   const ZefyrThemeData({
     this.boldStyle,
     this.italicStyle,
+    this.strikethroughStyle,
     this.linkStyle,
     this.paragraphTheme,
     this.headingTheme,
@@ -110,6 +116,7 @@ class ZefyrThemeData {
     TextStyle textStyle,
     TextStyle boldStyle,
     TextStyle italicStyle,
+    TextStyle strikethroughStyle,
     TextStyle linkStyle,
     StyleTheme paragraphTheme,
     HeadingTheme headingTheme,
@@ -123,6 +130,7 @@ class ZefyrThemeData {
       boldStyle: boldStyle ?? this.boldStyle,
       italicStyle: italicStyle ?? this.italicStyle,
       linkStyle: linkStyle ?? this.linkStyle,
+      strikethroughStyle: strikethroughStyle ?? this.strikethroughStyle,
       paragraphTheme: paragraphTheme ?? this.paragraphTheme,
       headingTheme: headingTheme ?? this.headingTheme,
       blockTheme: blockTheme ?? this.blockTheme,
@@ -137,6 +145,7 @@ class ZefyrThemeData {
     return copyWith(
       boldStyle: other.boldStyle,
       italicStyle: other.italicStyle,
+      strikethroughStyle: other.strikethroughStyle,
       linkStyle: other.linkStyle,
       paragraphTheme: other.paragraphTheme,
       headingTheme: other.headingTheme,
