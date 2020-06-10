@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'package:flutter/material.dart';
 import 'package:notus/notus.dart';
+import 'package:zefyr/src/widgets/list_bullet_generator.dart';
 
 import 'common.dart';
 import 'indent.dart';
@@ -18,16 +19,29 @@ class ZefyrList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ZefyrTheme.of(context);
-    List<Widget> items = [];
-    int index = 1;
+    var items = <Widget>[];
+    final indicesForIndentation = <int, int>{};
+
     for (var line in node.children) {
-      items.add(_buildItem(line, index));
-      index++;
+      final indentation =
+          (line as LineNode).style.get(NotusAttribute.indentation)?.value ?? 0;
+      final indentationIndex = indicesForIndentation[indentation] ?? 1;
+
+      items.add(
+        _buildItem(
+          line,
+          indentationIndex,
+          generators[indentation % generators.length],
+        ),
+      );
+
+      indicesForIndentation[indentation] = indentationIndex + 1;
     }
 
     final isNumberList =
         node.style.get(NotusAttribute.block) == NotusAttribute.block.numberList;
-    EdgeInsets padding = isNumberList
+
+    var padding = isNumberList
         ? theme.attributeTheme.numberList.padding
         : theme.attributeTheme.bulletList.padding;
     padding = padding.copyWith(left: theme.indentWidth);
@@ -38,18 +52,33 @@ class ZefyrList extends StatelessWidget {
     );
   }
 
-  Widget _buildItem(Node node, int index) {
+  Widget _buildItem(
+    Node node,
+    int index, [
+    String Function(int) indexStringGenerator,
+  ]) {
     LineNode line = node;
-    return ZefyrListItem(index: index, node: line);
+
+    return ZefyrListItem(
+      index: index,
+      node: line,
+      indexStringGenerator: indexStringGenerator,
+    );
   }
 }
 
 /// An item in a [ZefyrList].
 class ZefyrListItem extends StatelessWidget {
-  ZefyrListItem({Key key, this.index, this.node}) : super(key: key);
+  ZefyrListItem({
+    Key key,
+    this.index,
+    this.node,
+    this.indexStringGenerator,
+  }) : super(key: key);
 
   final int index;
   final LineNode node;
+  final String Function(int) indexStringGenerator;
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +88,14 @@ class ZefyrListItem extends StatelessWidget {
     final blockTheme = (style == NotusAttribute.block.bulletList)
         ? theme.attributeTheme.bulletList
         : theme.attributeTheme.numberList;
-    final bulletText =
-        (style == NotusAttribute.block.bulletList) ? '•' : '$index.';
+
+    var bulletText = '•';
+
+    if (style == NotusAttribute.block.numberList) {
+      bulletText =
+          indexStringGenerator != null ? indexStringGenerator(index) : '$index';
+      bulletText = '$bulletText.';
+    }
 
     TextStyle textStyle;
     Widget content;

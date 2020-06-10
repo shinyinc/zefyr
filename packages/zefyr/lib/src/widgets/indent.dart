@@ -9,11 +9,13 @@ class ZefyrIndent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ZefyrTheme.of(context);
+
     final indentLevel =
         node.style.get<int>(NotusAttribute.indentation)?.value ?? 0;
 
     return Padding(
-      padding: EdgeInsets.only(left: indentLevel * 16.0),
+      padding: EdgeInsets.only(left: indentLevel * theme.indentWidth),
       child: child,
     );
   }
