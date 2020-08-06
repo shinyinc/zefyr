@@ -18,7 +18,9 @@ class InputConnectionController implements TextInputClient {
 
   final RemoteValueChanged onValueChanged;
 
-  @override TextEditingValue get currentTextEditingValue => _lastKnownRemoteTextEditingValue;
+  @override
+  TextEditingValue get currentTextEditingValue =>
+      _lastKnownRemoteTextEditingValue;
 
   /// Returns `true` if there is open input connection.
   bool get hasConnection =>
@@ -182,4 +184,10 @@ class InputConnectionController implements TextInputClient {
       _sentRemoteValues.clear();
     }
   }
+
+  @override
+  AutofillScope get currentAutofillScope => null;
+
+  @override
+  void showAutocorrectionPromptRect(int start, int end) {}
 }
