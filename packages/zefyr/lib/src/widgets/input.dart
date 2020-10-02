@@ -190,4 +190,10 @@ class InputConnectionController implements TextInputClient {
 
   @override
   void showAutocorrectionPromptRect(int start, int end) {}
+
+  @override
+  void performPrivateCommand(String action, Map<String, dynamic> data) {
+    // TODO: implement performPrivateCommand
+    return;
+  }
 }
