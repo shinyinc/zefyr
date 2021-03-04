@@ -599,6 +599,7 @@ class _SelectionToolbarState extends State<_SelectionToolbar> {
       endpoints,
       widget.selectionOverlay,
       null,
+      null,
     );
     return CompositedTransformFollower(
       link: block.layerLink,
