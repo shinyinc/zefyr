@@ -97,14 +97,20 @@ class _ZefyrEditorState extends State<ZefyrEditor> {
 
   void showToolbar() {
     assert(_toolbarKey == null);
-    _toolbarKey = GlobalKey();
-    _scaffold.showToolbar(buildToolbar);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _toolbarKey = GlobalKey();
+      _scaffold.showToolbar(buildToolbar);
+    });
   }
 
   void hideToolbar() {
     if (_toolbarKey == null) return;
-    _scaffold.hideToolbar(buildToolbar);
-    _toolbarKey = null;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scaffold.hideToolbar(buildToolbar);
+      _toolbarKey = null;
+    });
   }
 
   Widget buildToolbar(BuildContext context) {
